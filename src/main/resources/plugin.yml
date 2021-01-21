@@ -1,0 +1,5 @@
+name: PseudoHardcoreMC
+version: ${project.version}
+main: me.rezcom.pseudohardcore.Main
+api-version: 1.16
+authors: [ Rezcom ]
