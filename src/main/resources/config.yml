@@ -1,0 +1,8 @@
+# Default death time
+default:
+  seconds: 0
+  minutes: 0
+  hours: 20
+  days: 0
+  weeks: 0
+  years: 0

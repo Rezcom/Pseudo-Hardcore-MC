@@ -3,3 +3,17 @@ version: ${project.version}
 main: me.rezcom.pseudohardcore.Main
 api-version: 1.16
 authors: [ Rezcom ]
+commands:
+  phc:
+    description: Access to most administrative PHC Commands.
+    permission-message: §cYou do not have permission.
+    usage: /<command> [args]. Use /phc help for more details.
+  revive:
+    description: Revives a player if they are allowed to respawn.
+    usage: /<command>
+  respawns:
+    description: Shows the queue of dead players and when they can respawn.
+    usage: /<command> or /phc <command>
+  forcerevive:
+    description: Force-revives a player and removes them from the respawn queue.
+    usage: /<command> [playername]

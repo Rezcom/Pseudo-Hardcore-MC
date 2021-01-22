@@ -1,4 +1,0 @@
-Loading BuildTools version: git-BuildTools-abd1c56-124 (#124)
-Java Version: Java 8
-Current Path: C:\Users\ntmac\OneDrive\Documents\GitHub\Pseudo-Hardcore-MC\lib\.
-Please do not run BuildTools in a Dropbox, OneDrive, or similar. You can always copy the completed jars there later.
