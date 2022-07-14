@@ -1,19 +1,25 @@
 package me.rezcom.pseudohardcore.commandhandler;
 
+import me.rezcom.pseudohardcore.Main;
 import me.rezcom.pseudohardcore.ymldata.DeathTimeData;
 import me.rezcom.pseudohardcore.ymldata.RespawnData;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.logging.Level;
 
 public class PHCCommandHandler implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args){
 
         // All commands starting with /phc
         if (!(cmd.getName().equalsIgnoreCase("phc"))){
-            System.out.println("[PseudoHardcoreMC] You should never see this. Something went horribly wrong. (Non-PHC Command received by PHC Handler)");
+            Main.logger.log(Level.SEVERE,"You should never see this. Something went horribly wrong. (Non-PHC Command received by PHC Handler)");
             return true;
         }
 
@@ -31,6 +37,19 @@ public class PHCCommandHandler implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("rtime")){
             return showRespawnTime(sender);
+        }
+
+        if (args[0].equalsIgnoreCase("help")){
+            Component message = Component
+                            .text("Pseudo Hardcore MC\n").color(TextColor.color(0xb83333))
+                            .append(Component.text("/phc respawns: ").color(TextColor.color(0xb8a433))).decorate()
+                            .append(Component.text("Shows all respawns of players currently dead.\n").color(TextColor.color(0x80ff93)))
+                            .append(Component.text("/phc clear: ").color(TextColor.color(0xb8a433)))
+                            .append(Component.text("Clears everyone's respawns.\n").color(TextColor.color(0x80ff93)))
+                            .append(Component.text("/phc rtime: ").color(TextColor.color(0xb8a433)))
+                            .append(Component.text("Displays the respawn time currently set. You can change this in deathtime.yml").color(TextColor.color(0x80ff93)));
+            sender.sendMessage(message);
+            return true;
         }
 
         return false;

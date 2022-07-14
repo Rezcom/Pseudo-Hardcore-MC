@@ -46,6 +46,7 @@ public class ReviveHandler implements Listener {
     public static void revivePlayer(Player player){
         player.setHealth(0.0D);
         player.spigot().respawn();
+
         player.setGameMode(GameMode.SURVIVAL);
     }
 

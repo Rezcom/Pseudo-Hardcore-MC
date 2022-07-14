@@ -12,14 +12,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class Main extends JavaPlugin {
+
+    public static Logger logger;
 
     @Override
     public void onEnable() {
         // Check if server is Hardcore
+
+        // Initialize the plugin's logger.
+        logger = this.getLogger();
+        logger.log(Level.INFO,"Initializing Plugin");
+
         if (!getServer().isHardcore()){
-            System.out.println("[PseudoHardcoreMC] WARNING: Hardcore is set to false in your server.properties file! Set to true to enable the plugin! Plugin will now be disabled.");
+            logger.log(Level.WARNING,"Hardcore is set to false in your server.properties file! Set to true to enable the plugin! Plugin will now be disabled.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -28,7 +36,7 @@ public final class Main extends JavaPlugin {
         if (!getDataFolder().exists()) {
             boolean mkdirSuccess = getDataFolder().mkdir();
             if (!mkdirSuccess){
-                System.out.println("[PseudoHardcoreMC] COULDN'T MAKE NEW PLUGIN DIRECTORY. Is there a conflict? Plugin will now be disabled.");
+                logger.log(Level.WARNING,"COULDN'T MAKE NEW PLUGIN DIRECTORY. Is there a conflict? Plugin will now be disabled.");
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             }
@@ -42,22 +50,22 @@ public final class Main extends JavaPlugin {
 
         RespawnData.restoreRespawns();
         DeathTimeData.readConfig();
-        System.out.println("[PseudoHardcoreMC] DataManagers initialized");
+        logger.log(Level.INFO,"DataManagers initialized.");
 
         // Events
         //getServer().getPluginManager().registerEvents(new BreakBlock(), this);
         getServer().getPluginManager().registerEvents(new DeathHandler(), this);
         getServer().getPluginManager().registerEvents(new ReviveHandler(), this);
-        System.out.println("[PseudoHardcoreMC] Registered Events");
+        logger.log(Level.INFO,"DataManagers initialized");
 
         // Commands
         try {
             Objects.requireNonNull(getCommand("phc")).setExecutor(new PHCCommandHandler());
             Objects.requireNonNull(getCommand("revive")).setExecutor(new ReviveCommand());
             Objects.requireNonNull(getCommand("respawns")).setExecutor(new RespawnsCommand());
-            System.out.println("[PseudoHardcoreMC] Registered Commands");
+            logger.log(Level.INFO,"Registered Commands.");
         } catch (NullPointerException e){
-            this.getLogger().log(Level.SEVERE, "Couldn't set the executors for the commands! Were they included in the plugin.yml?");
+            logger.log(Level.SEVERE, "Couldn't set the executors for the commands! Were they included in the plugin.yml?");
         }
 
 
@@ -67,6 +75,12 @@ public final class Main extends JavaPlugin {
         // Plugin shutdown logic
         if (!RespawnData.respawnMap.isEmpty()){
             RespawnData.saveRespawns();
+        }
+    }
+
+    public static void sendDebugMessage(String string, boolean send){
+        if (send){
+            logger.log(Level.INFO, string);
         }
     }
 }

@@ -5,13 +5,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class ReviveCommand implements CommandExecutor {
 
     // Handles the /revive command
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args){
         if (sender instanceof Player){
             // Player sent command
             Player player = (Player) sender;
@@ -25,7 +26,7 @@ public class ReviveCommand implements CommandExecutor {
         } else {
             // Console sent command
             if (args.length < 1){
-                System.out.println("Please enter a player name!");
+                sender.sendMessage("Please enter a player name!");
                 return true;
             }
 

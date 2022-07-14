@@ -8,8 +8,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class BreakBlock implements Listener {
+
+    public static boolean enabled = false;
+
     @EventHandler
     public void onPlayerBreakBlock(BlockBreakEvent event){
+        if (!enabled){return;}
         Block blockBroken = event.getBlock();
 
         if (blockBroken.getType() == Material.DIAMOND_ORE){

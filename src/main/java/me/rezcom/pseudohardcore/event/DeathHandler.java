@@ -1,11 +1,16 @@
 package me.rezcom.pseudohardcore.event;
 
+import me.rezcom.pseudohardcore.Main;
 import me.rezcom.pseudohardcore.ymldata.DeathTimeData;
 import me.rezcom.pseudohardcore.ymldata.RespawnData;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+
+import java.util.logging.Level;
 
 public class DeathHandler implements Listener {
 
@@ -17,7 +22,7 @@ public class DeathHandler implements Listener {
         // Death in order to revive, see revivePlayer() in ReviveHandler
         if (ReviveHandler.canRevive(event.getEntity())){
             // Remove from RespawnMap
-            event.setDeathMessage(event.getEntity().getDisplayName() + " has revived.");
+            event.deathMessage(Component.text(event.getPlayer().getName() + " has revived.").color(TextColor.color(0x9deb7c)));
             RespawnData.respawnMap.remove(event.getEntity().getUniqueId());
             RespawnData.saveRespawns();
             return;
@@ -25,7 +30,7 @@ public class DeathHandler implements Listener {
 
         // Actually died lmfao
         long deathTime = System.currentTimeMillis();
-        System.out.println(event.getEntity().getDisplayName() + " died at SystemTime: " + deathTime);
+        Main.logger.log(Level.INFO,event.getPlayer().getName() + " died at SystemTime: " + deathTime);
 
         long respawnTime = calculateDeathTime(deathTime); // Calculate respawn date
 
@@ -36,7 +41,8 @@ public class DeathHandler implements Listener {
 
     @EventHandler
     void onPlayerRespawn(PlayerRespawnEvent event){
-        System.out.println(event.getPlayer().getDisplayName() + " Respawned!");
+        Main.logger.log(Level.INFO,event.getPlayer().getName() + " Respawned!");
+
     }
 
     // Calculate how long a player should be dead from now, according to the death map.

@@ -1,11 +1,13 @@
 package me.rezcom.pseudohardcore.ymldata;
 
 import me.rezcom.pseudohardcore.DataManager;
+import me.rezcom.pseudohardcore.Main;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class RespawnData {
 
@@ -33,10 +35,10 @@ public class RespawnData {
             for (Map.Entry<String,Object> entry : oldMap.entrySet()){
                 respawnMap.put(UUID.fromString(entry.getKey()),(long)entry.getValue());
             }
-            System.out.println("[PseudoHardcoreMC] Respawn times loaded.");
+            Main.logger.log(Level.INFO,"Respawn times loaded.");
         } catch (NullPointerException e){
             respawnConfig.reloadConfig();
-            System.out.println("[PseudoHardcoreMC] No respawns to load.");
+            Main.logger.log(Level.INFO,"No respawns to load.");
 
         }
 

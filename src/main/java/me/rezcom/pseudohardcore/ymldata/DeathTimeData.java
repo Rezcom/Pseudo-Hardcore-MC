@@ -1,10 +1,12 @@
 package me.rezcom.pseudohardcore.ymldata;
 
 import me.rezcom.pseudohardcore.DataManager;
+import me.rezcom.pseudohardcore.Main;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class DeathTimeData {
 
@@ -13,7 +15,7 @@ public class DeathTimeData {
     public static Map<String,Integer> deathMap = new HashMap<String, Integer>(){{
         put("seconds",0);
         put("minutes",0);
-        put("hours",20);
+        put("hours",16);
         put("days",0);
         put("weeks",0);
     }};
@@ -23,7 +25,7 @@ public class DeathTimeData {
     private static final Map<String,Integer> defaultDeathMap = new HashMap<String,Integer>(){{
         put("seconds",0);
         put("minutes",0);
-        put("hours",20);
+        put("hours",16);
         put("days",0);
         put("weeks",0);
     }};
@@ -48,7 +50,7 @@ public class DeathTimeData {
             proofreadConfig();
 
         } catch (NullPointerException e){
-            System.out.println("[PseudoHardcoreMC] ERROR: Incorrect format: Delete your deathtime.yml and reboot the plugin!");
+            Main.logger.log(Level.SEVERE,"Incorrect format: Delete your deathtime.yml and reboot the plugin!");
         }
     }
 
