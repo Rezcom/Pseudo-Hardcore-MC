@@ -4,10 +4,14 @@ package me.rezcom.pseudohardcore;
 import me.rezcom.pseudohardcore.commandhandler.PHCCommandHandler;
 import me.rezcom.pseudohardcore.commandhandler.RespawnsCommand;
 import me.rezcom.pseudohardcore.commandhandler.ReviveCommand;
+import me.rezcom.pseudohardcore.commandhandler.ToggleHardcoreCommand;
 import me.rezcom.pseudohardcore.event.DeathHandler;
 import me.rezcom.pseudohardcore.event.ReviveHandler;
 import me.rezcom.pseudohardcore.ymldata.DeathTimeData;
 import me.rezcom.pseudohardcore.ymldata.RespawnData;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -17,20 +21,20 @@ import java.util.logging.Logger;
 public final class Main extends JavaPlugin {
 
     public static Logger logger;
+    public static World safeWorld;
 
     @Override
     public void onEnable() {
-        // Check if server is Hardcore
 
         // Initialize the plugin's logger.
         logger = this.getLogger();
         logger.log(Level.INFO,"Initializing Plugin");
 
-        if (!getServer().isHardcore()){
+        /*if (!getServer().isHardcore()){
             logger.log(Level.WARNING,"Hardcore is set to false in your server.properties file! Set to true to enable the plugin! Plugin will now be disabled.");
             getServer().getPluginManager().disablePlugin(this);
             return;
-        }
+        }*/
 
         // Check if plugin folder exists; creates new one
         if (!getDataFolder().exists()) {
@@ -43,6 +47,8 @@ public final class Main extends JavaPlugin {
         }
         getConfig().options().copyDefaults();
         saveDefaultConfig();
+
+
 
         //this.RespawnFileManager = new DataManager(this, "respawns.yml");
         RespawnData.respawnConfig = new DataManager(this, "respawns.yml");
@@ -63,6 +69,7 @@ public final class Main extends JavaPlugin {
             Objects.requireNonNull(getCommand("phc")).setExecutor(new PHCCommandHandler());
             Objects.requireNonNull(getCommand("revive")).setExecutor(new ReviveCommand());
             Objects.requireNonNull(getCommand("respawns")).setExecutor(new RespawnsCommand());
+            Objects.requireNonNull(getCommand("togglehardcore")).setExecutor(new ToggleHardcoreCommand());
             logger.log(Level.INFO,"Registered Commands.");
         } catch (NullPointerException e){
             logger.log(Level.SEVERE, "Couldn't set the executors for the commands! Were they included in the plugin.yml?");
@@ -83,4 +90,5 @@ public final class Main extends JavaPlugin {
             logger.log(Level.INFO, string);
         }
     }
+
 }

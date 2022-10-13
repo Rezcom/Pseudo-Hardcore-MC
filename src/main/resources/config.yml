@@ -6,3 +6,5 @@ default:
   days: 0
   weeks: 0
   years: 0
+# Respawn world to go to once a player dies in a Hardcore World
+default-world: safe_world

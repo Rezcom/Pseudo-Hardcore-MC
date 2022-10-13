@@ -1,15 +1,21 @@
 package me.rezcom.pseudohardcore.event;
 
+
 import me.rezcom.pseudohardcore.ymldata.RespawnData;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import net.kyori.adventure.text.Component;
 
 import java.time.Instant;
 
 public class ReviveHandler implements Listener {
+
 
     // Handles whenever a player logs in.
     // Should respawn the player in Survival mode, and remove them from the
@@ -19,7 +25,8 @@ public class ReviveHandler implements Listener {
     void onPlayerJoin(PlayerJoinEvent event){
 
         // Attempt to revive player
-        if (canRevive(event.getPlayer())){
+        Player player = event.getPlayer();
+        if (canRevive(player)){
             revivePlayer(event.getPlayer());
         }
 
@@ -46,7 +53,9 @@ public class ReviveHandler implements Listener {
     public static void revivePlayer(Player player){
         player.setHealth(0.0D);
         player.spigot().respawn();
-
+        TextComponent reviveText = Component.text(player.getName() + " has revived.").color(TextColor.color(0x66c1fa));
+        Bukkit.broadcast(reviveText);
+        RespawnData.respawnMap.remove(player.getUniqueId());
         player.setGameMode(GameMode.SURVIVAL);
     }
 

@@ -17,3 +17,7 @@ commands:
   forcerevive:
     description: Force-revives a player and removes them from the respawn queue.
     usage: /<command> [playername]
+  togglehardcore:
+    description: Toggles the current world to be hardcore.
+    usage: /togglehardcore
+    permission: PHC.togglehardcore

@@ -4,12 +4,18 @@ import me.rezcom.pseudohardcore.Main;
 import me.rezcom.pseudohardcore.ymldata.DeathTimeData;
 import me.rezcom.pseudohardcore.ymldata.RespawnData;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.GameMode;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class DeathHandler implements Listener {
@@ -19,30 +25,42 @@ public class DeathHandler implements Listener {
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event){
 
-        // Death in order to revive, see revivePlayer() in ReviveHandler
-        if (ReviveHandler.canRevive(event.getEntity())){
-            // Remove from RespawnMap
-            event.deathMessage(Component.text(event.getPlayer().getName() + " has revived.").color(TextColor.color(0x9deb7c)));
-            RespawnData.respawnMap.remove(event.getEntity().getUniqueId());
-            RespawnData.saveRespawns();
+        World world = event.getPlayer().getWorld();
+        if (RespawnData.respawnMap.containsKey(event.getPlayer().getUniqueId())){
+            TextComponent deathMsg = Component.text("");
+            event.deathMessage(deathMsg);
             return;
         }
 
-        // Actually died lmfao
-        long deathTime = System.currentTimeMillis();
-        Main.logger.log(Level.INFO,event.getPlayer().getName() + " died at SystemTime: " + deathTime);
+        if (world.isHardcore() && !RespawnData.respawnMap.containsKey(event.getPlayer().getUniqueId())){
+            // Actually died lmfao
+            long deathTime = System.currentTimeMillis();
+            //Main.logger.log(Level.INFO,event.getPlayer().getName() + " died at SystemTime: " + deathTime);
 
-        long respawnTime = calculateDeathTime(deathTime); // Calculate respawn date
+            long respawnTime = calculateDeathTime(deathTime); // Calculate respawn date
 
-        // Add the Respawn Time to the RespawnMap
-        RespawnData.respawnMap.put(event.getEntity().getUniqueId(),respawnTime);
-        RespawnData.saveRespawns();
+            // Add the Respawn Time to the RespawnMap
+            RespawnData.respawnMap.put(event.getEntity().getUniqueId(),respawnTime);
+            RespawnData.saveRespawns();
+
+            //Main.logger.log(Level.INFO, "Player Gamemode: " + event.getPlayer().getGameMode());
+
+        }
+
     }
 
     @EventHandler
     void onPlayerRespawn(PlayerRespawnEvent event){
-        Main.logger.log(Level.INFO,event.getPlayer().getName() + " Respawned!");
-
+        //Main.logger.log(Level.INFO,event.getPlayer().getName() + " hit the Respawn Button!");
+        Player player = event.getPlayer();
+        //Main.logger.log(Level.INFO, "World hardcore status: " + player.getWorld().isHardcore());
+        if (!player.getWorld().isHardcore()){
+            player.setGameMode(GameMode.SURVIVAL);
+        }
+        if (!ReviveHandler.canRevive(player) && player.getWorld().isHardcore()){
+            //Main.logger.log(Level.INFO,"Should be spectator.");
+            player.setGameMode(GameMode.SPECTATOR);
+        }
     }
 
     // Calculate how long a player should be dead from now, according to the death map.
