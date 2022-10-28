@@ -6,6 +6,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,6 +27,10 @@ public class ReviveHandler implements Listener {
 
         // Attempt to revive player
         Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.SURVIVAL){
+            RespawnData.respawnMap.remove(player.getUniqueId());
+            RespawnData.saveRespawns();
+        }
         if (canRevive(player)){
             revivePlayer(event.getPlayer());
         }
@@ -45,17 +50,28 @@ public class ReviveHandler implements Listener {
             Instant rTime = Instant.ofEpochMilli(RespawnData.respawnMap.get(player.getUniqueId()));
 
             return now.isAfter(rTime);
-        } else return player.getGameMode() != GameMode.SURVIVAL;
+        } else return player.getGameMode() == GameMode.SPECTATOR;
 
     }
 
     // Revives the player from being dead.
     public static void revivePlayer(Player player){
-        player.setHealth(0.0D);
-        player.spigot().respawn();
+
+        // Broadcast they revived
         TextComponent reviveText = Component.text(player.getName() + " has revived.").color(TextColor.color(0x66c1fa));
         Bukkit.broadcast(reviveText);
+
+        // Remove from list of respawning players
         RespawnData.respawnMap.remove(player.getUniqueId());
+        RespawnData.saveRespawns();
+
+        Location bedspawn = player.getBedSpawnLocation();
+        if (bedspawn != null){
+            player.teleport(bedspawn);
+        } else {
+            player.teleport(player.getWorld().getSpawnLocation());
+        }
+
         player.setGameMode(GameMode.SURVIVAL);
     }
 

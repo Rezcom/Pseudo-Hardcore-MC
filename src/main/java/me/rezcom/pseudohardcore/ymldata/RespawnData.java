@@ -2,6 +2,7 @@ package me.rezcom.pseudohardcore.ymldata;
 
 import me.rezcom.pseudohardcore.DataManager;
 import me.rezcom.pseudohardcore.Main;
+import org.bukkit.Location;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +44,6 @@ public class RespawnData {
         }
 
     }
-
 
 
 }

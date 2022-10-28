@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,14 +26,21 @@ public class DeathHandler implements Listener {
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event){
 
-        World world = event.getPlayer().getWorld();
-        if (RespawnData.respawnMap.containsKey(event.getPlayer().getUniqueId())){
-            TextComponent deathMsg = Component.text("");
-            event.deathMessage(deathMsg);
-            return;
-        }
+        Player player = event.getPlayer();
 
-        if (world.isHardcore() && !RespawnData.respawnMap.containsKey(event.getPlayer().getUniqueId())){
+        World world = player.getWorld();
+
+        UUID uuid = player.getUniqueId();
+        /*if (RespawnData.locationMap.containsKey(uuid)){
+
+            Location locationMapSpawn = RespawnData.locationMap.get(uuid);
+            if (player.getWorld() == locationMapSpawn.getWorld()){
+                player.setBedSpawnLocation(locationMapSpawn);
+            }
+
+        }*/
+
+        if (world.isHardcore() && !RespawnData.respawnMap.containsKey(player.getUniqueId())){
             // Actually died lmfao
             long deathTime = System.currentTimeMillis();
             //Main.logger.log(Level.INFO,event.getPlayer().getName() + " died at SystemTime: " + deathTime);
@@ -51,12 +59,9 @@ public class DeathHandler implements Listener {
 
     @EventHandler
     void onPlayerRespawn(PlayerRespawnEvent event){
-        //Main.logger.log(Level.INFO,event.getPlayer().getName() + " hit the Respawn Button!");
+
         Player player = event.getPlayer();
-        //Main.logger.log(Level.INFO, "World hardcore status: " + player.getWorld().isHardcore());
-        if (!player.getWorld().isHardcore()){
-            player.setGameMode(GameMode.SURVIVAL);
-        }
+
         if (!ReviveHandler.canRevive(player) && player.getWorld().isHardcore()){
             //Main.logger.log(Level.INFO,"Should be spectator.");
             player.setGameMode(GameMode.SPECTATOR);
