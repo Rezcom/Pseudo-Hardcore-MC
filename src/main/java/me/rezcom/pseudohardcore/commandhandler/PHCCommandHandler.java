@@ -5,6 +5,8 @@ import me.rezcom.pseudohardcore.ymldata.DeathTimeData;
 import me.rezcom.pseudohardcore.ymldata.RespawnData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,6 +41,10 @@ public class PHCCommandHandler implements CommandExecutor {
             return showRespawnTime(sender);
         }
 
+        if (args[0].equalsIgnoreCase("bedspawn")){
+            return showBedSpawnLocation(sender, args);
+        }
+
         if (args[0].equalsIgnoreCase("help")){
             Component message = Component
                             .text("Pseudo Hardcore MC\n").color(TextColor.color(0xb83333))
@@ -54,8 +60,6 @@ public class PHCCommandHandler implements CommandExecutor {
 
         return false;
     }
-
-
 
 
     // Clears all respawn data in the respawn map, and updates the respawns.yml accordingly.
@@ -100,6 +104,21 @@ public class PHCCommandHandler implements CommandExecutor {
         }
         sender.sendMessage("Respawn Time after Death: " + weeks + days + hours + minutes + seconds);
 
+        return true;
+    }
+
+    private boolean showBedSpawnLocation(CommandSender sender, String[] args){
+        if (args.length == 2){
+            OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
+            sender.sendMessage("Bed spawn of " + player + ": " + player.getBedSpawnLocation());
+        } else {
+            if (!(sender instanceof Player)){
+                sender.sendMessage("Only players can use this command.");
+                return true;
+            }
+            Player player = (Player)sender;
+            sender.sendMessage("Bed Spawn: " + player.getBedSpawnLocation());
+        }
         return true;
     }
 

@@ -80,20 +80,16 @@ public class HomewardBoneHandler implements Listener {
 
     @EventHandler
     void createBoneAnvilEvent(PrepareAnvilEvent event){
-        Main.logger.log(Level.INFO,"Prepare anvil event");
         AnvilInventory anvilInventory = event.getInventory();
         ItemStack firstItem = anvilInventory.getFirstItem();
         ItemStack secondItem = anvilInventory.getSecondItem();
 
         if (firstItem == null || secondItem == null){
-            Main.logger.log(Level.INFO,"BOTH ARE NULL");
             return;
         }
 
-        Main.logger.log(Level.INFO,"FIRST: " + firstItem + "\nSECOND: " + secondItem);
 
         if (firstItem.getType() == Material.BONE && firstItem.getAmount() == 1 && secondItem.getType() == Material.ENDER_EYE && secondItem.getAmount() == 1){
-            Main.logger.log(Level.INFO,"BOTH ARE GOOD");
             anvilInventory.setRepairCost(5);
             event.setResult(homewardBoneStack);
 

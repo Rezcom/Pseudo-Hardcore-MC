@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -22,6 +23,8 @@ import java.util.logging.Level;
 public class DeathHandler implements Listener {
 
     // Whenever a player dies
+
+    private static Map<UUID,Location> playerDeathLoc = new HashMap<>();
 
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event){
@@ -31,6 +34,8 @@ public class DeathHandler implements Listener {
         World world = player.getWorld();
 
         UUID uuid = player.getUniqueId();
+
+        playerDeathLoc.put(uuid,player.getLocation());
         /*if (RespawnData.locationMap.containsKey(uuid)){
 
             Location locationMapSpawn = RespawnData.locationMap.get(uuid);
@@ -43,7 +48,7 @@ public class DeathHandler implements Listener {
         if (world.isHardcore() && !RespawnData.respawnMap.containsKey(player.getUniqueId())){
             // Actually died lmfao
             long deathTime = System.currentTimeMillis();
-            //Main.logger.log(Level.INFO,event.getPlayer().getName() + " died at SystemTime: " + deathTime);
+
 
             long respawnTime = calculateDeathTime(deathTime); // Calculate respawn date
 
@@ -51,7 +56,7 @@ public class DeathHandler implements Listener {
             RespawnData.respawnMap.put(event.getEntity().getUniqueId(),respawnTime);
             RespawnData.saveRespawns();
 
-            //Main.logger.log(Level.INFO, "Player Gamemode: " + event.getPlayer().getGameMode());
+
 
         }
 
@@ -61,9 +66,11 @@ public class DeathHandler implements Listener {
     void onPlayerRespawn(PlayerRespawnEvent event){
 
         Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
 
         if (!ReviveHandler.canRevive(player) && player.getWorld().isHardcore()){
-            //Main.logger.log(Level.INFO,"Should be spectator.");
+            //Main.logger.log(Level.INFO,"Player can't revive.");
+            event.setRespawnLocation(playerDeathLoc.get(uuid));
             player.setGameMode(GameMode.SPECTATOR);
         }
     }
